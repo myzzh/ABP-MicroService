@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Text;
 using System.Threading.Tasks;
 using BaseService.Permissions;
 using BaseService.Systems.MenuManagement.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
@@ -84,7 +82,6 @@ namespace BaseService.Systems.MenuManagement
             var menu = await _repository.GetAsync(id);
             menu.Pid = input.Pid;
             menu.CategoryId = input.CategoryId;
-            //TODO：菜单名重复验证
             menu.Name = input.Name;
             menu.Label = input.Label;
             menu.Sort = input.Sort;

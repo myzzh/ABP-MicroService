@@ -218,11 +218,11 @@ export default {
         });
     },
     handleCreate() {
-      this.$router.push({ path: "/tool/formCreate" });
+      this.$router.push({ path: "/tool/form/create" });
     },
     handleUpdate(row) {
       if (row) {
-        this.$router.push({ path: "/tool/formEdit/" + row.id });
+        this.$router.push({ path: "/tool/form/edit/" + row.id });
       } else {
         if (this.multipleSelection.length != 1) {
           this.$message({
@@ -232,7 +232,7 @@ export default {
           return;
         } else {
           this.$router.push({
-            path: "/tool/formEdit/" + this.multipleSelection[0].id,
+            path: "/tool/form/edit/" + this.multipleSelection[0].id,
           });
         }
       }

@@ -49,7 +49,7 @@ axios.interceptors.response.use((res) => {
         router.replace({
           path: '/login'
         })
-        break
+        return
 
       case 400:
         error.code = err.response.data.error.code
@@ -92,9 +92,7 @@ axios.interceptors.response.use((res) => {
         break
 
       case 502:
-        error.code = err.response.data.error.code
-        error.message = err.response.data.error.message
-        error.details = err.response.data.error.details
+        error.code = "502 Bad Gateway"
         break
 
       case 503:
