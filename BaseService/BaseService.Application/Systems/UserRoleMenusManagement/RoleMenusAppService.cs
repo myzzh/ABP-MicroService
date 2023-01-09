@@ -29,6 +29,7 @@ namespace BaseService.Systems.UserMenusManagement
             _roleMenuRepository = roleMenuRepository;
         }
 
+        [Authorize(IdentityPermissions.Roles.ManagePermissions)]
         public async Task Update(UpdateRoleMenuDto input)
         {
             var roleMenus = new List<RoleMenu>();
@@ -40,12 +41,16 @@ namespace BaseService.Systems.UserMenusManagement
             await _roleMenuRepository.InsertManyAsync(roleMenus);
         }
 
-        public async Task<ListResultDto<MenusTreeDto>> GetMenusTree()
+        [Authorize(IdentityPermissions.Roles.Default)]
+        public async Task<ListResultDto<MenusListDto>> GetMenusList()
         {
-            var menus = await _menuRepository.GetListAsync();
-            var root = menus.Where(_ => _.Pid == null).OrderBy(_ => _.Sort).ToList();
-            var dtos = ObjectMapper.Map<List<Menu>, List<MenusTreeDto>>(menus);
-            return new ListResultDto<MenusTreeDto>(dtos.OrderBy(_ => _.Sort).ToList());
+            var result = new List<Menu>();
+            if (!CurrentTenant.Id.HasValue)
+                result = await _menuRepository.GetListAsync();
+            else
+                result = await _menuRepository.GetListAsync(_ => _.IsHost == false);
+            var dtos = ObjectMapper.Map<List<Menu>, List<MenusListDto>>(result);
+            return new ListResultDto<MenusListDto>(dtos.OrderBy(_ => _.Sort).ToList());
         }
 
         /// <summary>
@@ -61,6 +66,7 @@ namespace BaseService.Systems.UserMenusManagement
             return new ListResultDto<RoleMenusDto>(LoadRoleMenusTree(root, menus));
         }
 
+        [Authorize(IdentityPermissions.Roles.Default)]
         public async Task<ListResultDto<Guid>> GetRoleMenuIds(Guid id)
         {
             var menuIds = await _roleMenuRepository.GetListAsync(_ => _.RoleId == id);
